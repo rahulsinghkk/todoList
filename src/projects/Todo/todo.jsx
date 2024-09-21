@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import './todo.css'
 import { ToDoClearButton } from "./todoClearButton"
 import { TodoForm } from "./todoForm"
@@ -6,7 +6,14 @@ import { TodoList } from "./todoList"
 import { TodoDate } from "./todoDate"
 
 export const Todo = () => {
-    const [todos, setTodos] = useState([])
+    const [todos, setTodos] = useState(() => {
+        const savedTodos = localStorage.getItem('todos')
+        return savedTodos ? JSON.parse(savedTodos) : []
+    })
+
+    useEffect(()=>{
+        localStorage.setItem('todos', JSON.stringify(todos))
+    }, [todos])
 
     function addTodo(task){
         setTodos([...todos,  task])
